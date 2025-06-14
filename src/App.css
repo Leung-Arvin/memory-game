@@ -1,0 +1,193 @@
+/* App.css */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #222;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 100vw;
+}
+
+.enemy-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0rem;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: 100vw  700px;
+  background-image: url(/rhaegal_background.png);
+}
+
+.player-hud-container {
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+  gap: 2rem;
+  align-items: flex-end;
+}
+
+.player-icon {
+  padding: 1.5rem;
+  padding-bottom: 300px;
+  padding-right: 50px;
+  border: 10px solid white;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.character-sprite {
+  width: 16px;
+  height: 20px;
+  background-image: url('/Meow-Knight_Idle.png');
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  transform: scale(15);
+  transform-origin: left top;
+}
+
+.beginning-action-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.health-bar-container {
+  width: 200px;
+  height: 20px;
+  background-color: #333;
+  border: 4px solid white;
+  border-radius: 5px;
+  top: 280px;
+  right:20px;
+  position: relative;
+}
+
+.health-bar-fill {
+  height: 100%;
+  background: red;
+  transition: width 0.3s ease;
+}
+
+.health-text {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 15px;
+  text-shadow: 1px 1px 1px black;
+  font-family: monospace;
+}
+
+
+button {
+  padding: 10px 585px;
+  color: white;
+  font-size: 7rem;
+  cursor: pointer;
+  border: 4px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 5px;
+  font-family: monospace;
+}
+
+.attack {
+  background-color: red;
+}
+
+.run {
+  background-color: blue;
+}
+
+
+
+.enemy_sprite {
+  height: 600px;
+  width: 600px;
+}
+
+.boss-health-bar-container {
+  width: 800px;
+  height: 50px;
+  margin-top: 10px;
+  background-color: #333;
+  border: 4px solid white;
+  border-radius: 5px;
+}
+
+.boss-health-bar-fill {
+  height: 100%;
+  background: red;
+  transition: width 0.3s ease;
+}
+
+
+.boss-health-text {
+  color: white;
+  font-size: 1.6rem;
+  font-family: monospace;
+  position: relative;
+  top: -40px;
+  left: 240px;
+}
+
+.sequence-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sequence-instruction {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.sequence-shape {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.sequence-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sequence-dot.activated {
+  background: #4CAF50;
+}
+
+.sequence-dot.flashing {
+  background: red;
+}
