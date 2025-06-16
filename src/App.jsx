@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import GameScreen from './components/GameScreen';
+import TitleScreen from './components/TitleScreen';
 
 function App() {
   const [gameState, setGameState] = useState("title"); // title, boss, fight
