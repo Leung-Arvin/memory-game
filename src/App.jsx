@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import GameScreen from './components/GameScreen';
-import TitleScreen from './components/TitleScreen';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import GameScreen from "./components/GameScreen";
+import TitleScreen from "./components/TitleScreen";
 
 function App() {
   const [gameState, setGameState] = useState("title"); // title, boss, fight
   const [selectedBoss, setSelectedBoss] = useState(null);
-  const startGame = () => { setGameState("boss");}
-  const selectBoss = () => { 
+  const startGame = () => {
+    setGameState("boss");
+  };
+  const selectBoss = () => {
     setSelectedBoss(); // insert boss data here
     setGameState("fight");
-  }
-  return(
+  };
+  return (
     <>
-    { gameState === "title" && <TitleScreen/> }
-    { gameState === "boss" && <BossSelection/> }
-    { gameState === "fight" && <GameScreen/> }
+      {gameState === "title" && <TitleScreen onStart={startGame} />}
+      {gameState === "boss" && <BossSelection />}
+      {gameState === "fight" && <GameScreen />}
     </>
   );
 }
