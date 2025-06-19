@@ -1,5 +1,5 @@
+import './fight.css';
 import React, { useState, useEffect } from 'react';
-import '../App.css';
 
 function GameScreen() {
   const [frame, setFrame] = useState(0);
@@ -122,66 +122,17 @@ function GameScreen() {
 
   return (
     <div className="game-container">
-
-      <div className="enemy-container">
-        <div className="boss-health-bar-container">
-            <div 
-              className="boss-health-bar-fill"
-              style={{ width: `${(bosshealth / maxHealth) * 100}%` }}
-            />
-            <span className="boss-health-text">Rhaegal, The Self Devouring</span>
-          </div>
-        <img className='enemy_sprite' src='/rhaegal_sprite.png'/>
+      <div className='health-header'>
         
       </div>
+      <div className='fight-container'>
 
-
-      <div className="player-hud-container">
-
-        <div className="player-icon">
-          <div 
-            className="character-sprite"
-            style={{ backgroundPosition: `0 -${frame * 25}px` }}
-          />
-          <div className="health-bar-container">
-            <div 
-              className="health-bar-fill"
-              style={{ width: `${(playerhealth / maxHealth) * 100}%` }}
-            />
-            <span className="health-text">{playerhealth}/{maxHealth}</span>
-          </div>
-        </div>
-
-
-        <div className="beginning-action-container">
-
-            <button className="attack" onClick={() => handlePlayerAction('attack')}>Fight</button>
-            <button className="run" onClick={() => handlePlayerAction('heal')}>Heal</button>
-        </div>
       </div>
-      {sequenceActive && (
-        <div className="sequence-overlay">
-          <div className="sequence-instruction">
-            {showPattern ? "Watch the sequence!" : 
-             sequenceResult === null ? "Repeat the sequence!" : 
-             sequenceResult === 'success' ? "Success!" : "Failed!"}
-          </div>
-          <div className="sequence-shape">
-            {sequencePattern.map((point, index) => (
-              <div
-                key={index}
-                className={`sequence-dot ${currentSequenceStep > index ? 'activated' : ''}`}
-                style={{
-                  left: `${point[0]}%`,
-                  top: `${point[1]}%`,
-                  animationDelay: `${index * 0.5}s`
-                }}
-                onClick={() => handleSequenceClick(index)}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <div className='dialog-box'>
+
+      </div>
+      <div className='action-buttons'>
+      </div>
     </div>
   );
 }
