@@ -223,5 +223,48 @@ h2 {
   text-decoration: none;
   animation: pulse 1.5s infinite;
   cursor: pointer;
-  transition: color 0.3s ease;
+}
+body {
+  background: #dce3e6;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+.pixel-container {
+  width: 70%;
+  text-align: center;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pixel-title {
+  background: #2e2e2e;
+  padding: 15px;
+  color: #fff;
+  margin-bottom: 30px;
+  font-family: "Press Start 2P", system-ui;
+  font-size: 24px;
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff1f, inset 0px -5px #00000030;
+}
+
+.pixel-button {
+  color: #fff;
+  padding: 15px 40px;
+  margin: 10px;
+  font-size: 14px;
+  font-family: "Press Start 2P", system-ui;
+  border: none;
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff36;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.pixel-button:active {
+  transform: translateY(5px);
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    inset 0px 5px #00000038;
 }
