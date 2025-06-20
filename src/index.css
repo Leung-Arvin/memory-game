@@ -12,8 +12,10 @@
 
 * {
   font-family: Silkscreen;
+  color:white;
+  overflow:  hidden;
 }
 
-p {
-  color: white;
+body {
+  background-color: var(--letterbox)
 }

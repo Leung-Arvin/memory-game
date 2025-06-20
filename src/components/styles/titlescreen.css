@@ -1,0 +1,90 @@
+.title {
+  font-family: "Press Start 2P", cursive;
+  font-size: 85px;
+  font-weight: 900;
+  line-height: 98px;
+  color: #1e7121;
+  -webkit-text-stroke: 4px #ff5656;
+  text-shadow: 4px 4px 3.6px #1e3445;
+}
+
+.subtitle {
+  font-size: 40px;
+  color: #f9c62c;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse-text {
+  display: inline-block;
+  color: #f9c62c;
+  font-family: "Press Start 2P", cursive;
+  text-decoration: none;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.blinking-text {
+  display: inline-block;
+  color: #f9c62c;
+  font-family: "Press Start 2P", cursive;
+  text-decoration: none;
+  animation: blink 1.5s infinite;
+}
+
+.pixel-container {
+  width: 70%;
+  text-align: center;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pixel-title {
+  background: #2e2e2e;
+  padding: 15px;
+  color: #fff;
+  margin-bottom: 30px;
+  font-family: "Press Start 2P", system-ui;
+  font-size: 24px;
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff1f, inset 0px -5px #00000030;
+}
+
+.pixelButton {
+  color: #fff;
+  padding: 15px 40px;
+  margin: 10px;
+  font-size: 14px;
+  font-family: "Press Start 2P", system-ui;
+  border: none;
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff36;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.pixel-button:active {
+  transform: translateY(5px);
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    inset 0px 5px #00000038;
+}
