@@ -1,4 +1,4 @@
-import './boss-selection.css'
+import './styles/boss-selection.css'
 
 export default function BossSelection({onBossSelect}) {
 
@@ -8,7 +8,7 @@ export default function BossSelection({onBossSelect}) {
 
   return (
     <div className='boss-selection'>
-      <h1>A couple of people are after your last life...
+      <h1 className="bossTitle">A couple of people are after your last life...
       Select one to deal with
       </h1>
       <div className="boss-select-options">

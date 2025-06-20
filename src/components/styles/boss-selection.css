@@ -7,14 +7,14 @@
   align-items: center;
 }
 
-h1 {
+.bossTitle {
   max-width: 1000px;
   text-align: center;
 }
 
 .boss-select-options {
   display: flex;
-  gap: 180px;
+  gap: 250px;
 }
 
 .card {

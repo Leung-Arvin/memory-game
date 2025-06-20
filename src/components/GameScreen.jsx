@@ -1,4 +1,4 @@
-import './fight.css';
+import './styles/fight.css';
 import React, { useState, useEffect } from 'react';
 
 function GameScreen() {
