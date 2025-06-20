@@ -15,14 +15,17 @@ function App() {
   const [selectedBoss, setSelectedBoss] = useState(null);
   const startGame = () => { setGameState("boss");}
   const selectBoss = (boss) => { 
-    setSelectedBoss(boss);
+    console.log("Selected Boss:", boss);
+    const bossData = bosses.find(b => b.name === boss);
+    console.log("Boss Data:", bossData);
+    setSelectedBoss(bossData);
     setGameState("fight");
   }
   return (
     <>
       {gameState === "title" && <TitleScreen  onStart={startGame} />}
       {gameState === "boss" && <BossSelection onBossSelect={selectBoss} />}
-      {gameState === "fight" && <GameScreen />}
+      {gameState === "fight" && <GameScreen boss={selectedBoss} />}
     </>
   );
 }

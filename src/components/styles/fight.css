@@ -3,4 +3,110 @@
   height: 70vh;
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
+}
+
+.sprite-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin-top: 80px;
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.meowric {
+  height: 200px;
+  width: 200px;
+  margin-top: 150px;
+}
+
+.enemy {
+  height: 400px;
+  width: 230px;
+}
+
+.health-bars-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 170px;
+  margin-top: 20px;
+}
+
+.abilities-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+}
+
+.dialog-box {
+  position: absolute;  
+  top: 89%;  
+  background-color: black;
+  padding: 20px;
+  font-size: 30px;
+}
+
+.dialog-box p {
+  overflow: hidden; 
+  white-space: nowrap; 
+  margin: 0 auto; 
+  letter-spacing: .15em; 
+  animation: 
+    typing 1.0s steps(10, end)
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+
+
+.sequence-dots {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.sequence-dot {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sequence-dot.active {
+  background: red;
+}
+
+.sequence-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color:rgba(0, 0, 0, 0.5);
+  z-index: 20;
+}
+
+.sequence-title {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
 }

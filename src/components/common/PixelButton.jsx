@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/pixel-button.css"; // Import the CSS for styling
 
 const PixelButton = ({ label, onClick, color = "#6abc3a" }) => {
   const style = {

@@ -1,0 +1,34 @@
+.health-bar-container {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px 10px;
+  font-family: Arial, sans-serif;
+}
+
+.health-bar-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.health-label {
+  font-weight: bold;
+  color: white;
+}
+
+.health-value {
+  color: white;
+}
+
+.health-bar {
+  height: 20px;
+  background-color: #e0e0e0;
+  border: 5px;
+  border-color: white;
+  border-style: solid;
+}
+
+.health-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}

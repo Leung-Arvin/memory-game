@@ -1,10 +1,14 @@
 import React from "react";
-import PixelButton from "./PixelButton";
 import "./styles/TitleScreen.css"; 
 
 const TitleScreen = ({ onStart }) => {
   return (
-    <div className="title-screen-container">
+    <div className="title-screen-container" style={{
+      cursor: "pointer",
+    }} onClick={(e) => {
+      e.preventDefault();
+      onStart();
+    }}>
       <h1 style={{ width: "50%", textAlign: "center" }} className="title">The Fading Tail</h1>
       <p className="subtitle">Meowric's Adventures</p>
       <h2>
@@ -15,7 +19,6 @@ const TitleScreen = ({ onStart }) => {
             onStart();
           }}
           style={{
-            cursor: "pointer",
             color: "#f9c62c",
             textDecoration: "none",
           }}
