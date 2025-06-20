@@ -1,4 +1,5 @@
 import './styles/boss-selection.css'
+import './styles/healthbar.css'
 
 export default function BossSelection({onBossSelect}) {
 
@@ -12,7 +13,7 @@ export default function BossSelection({onBossSelect}) {
       Select one to deal with
       </h1>
       <div className="boss-select-options">
-        <div className="card" onClick={() => handleBossSelection('william')}>
+        <div className="card" onClick={() => handleBossSelection('sir william')}>
           <img src="pixel_arrow.png" className="arrow"/>
           <img src="william_sprite.png" className="william"/>
           <h2>Sir William, the hollow knight</h2>
