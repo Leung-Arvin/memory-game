@@ -4,7 +4,7 @@ import './styles/fight.css';
 import React, { useState, useEffect } from 'react';
 
 function GameScreen({boss, onRun}) {
-  const [gameState, setGameState] = useState('start'); // 'start', 'abilities', 'blank'
+  const [gameState, setGameState] = useState('player_lost'); 
   const [ability, setAbility] = useState(null);
   const [playerhealth, setPlayerHealth] = useState(100);
   const [bosshealth, setBossHealth] = useState(boss.health);
@@ -68,7 +68,7 @@ function GameScreen({boss, onRun}) {
     if (isCorrectSoFar) {
       if (!dodgeSequence) {
         if (ability === 'Mighty Scratch' || ability === 'Pawerful Pounce') {
-          const baseDamage = 5; 
+          const baseDamage = 15; 
           const damage = baseDamage * newInput.length; 
 
           if (newInput.length === sequence.length) {
@@ -155,8 +155,28 @@ function GameScreen({boss, onRun}) {
     }
   }, [gameState]);
 
+  useEffect(() => {
+    if (bosshealth <= 0) {
+      setSequenceState('');
+      setClickedDots([]);
+      setGameState('enemy_vanquished');
+    }
+  }, [bosshealth]);
+  
+  // Check for defeat (player defeated)
+  useEffect(() => {
+    if (playerhealth <= 0) {
+      setGameState('player_lost');
+    }
+  }, [playerhealth]);
+
+  const returnToBossMenu = () => {
+    if (gameState === "enemy_vanquished" || gameState ===  "player_lost") {
+        onRun();
+    }
+  }
   return (
-    <div className="game-container">
+    <div className="game-container" onClick={returnToBossMenu}>
       {(gameState === 'sequence' || sequenceState === 'success' || sequenceState === 'failed' || 
         sequenceState === 'dodge_success' || sequenceState === 'dodge_failed') && (
         <div className="sequence-container">
@@ -174,7 +194,7 @@ function GameScreen({boss, onRun}) {
           {sequenceState === "failed" && <h2 className="sequence-title">Failed </h2>}
           {sequenceState === "dodge_success" && <h2 className="sequence-title">Dodged! </h2>}
           {sequenceState === "dodge_failed" && <h2 className="sequence-title">Ouch! </h2>}
-          
+
           <div className="sequence-dots">
             {dots.map(dot => (
               <div
@@ -190,6 +210,25 @@ function GameScreen({boss, onRun}) {
           </div>
         </div>
       )}
+
+      {(gameState === 'enemy_vanquished' || gameState === 'player_lost') && (
+      <div className="outcome-screen">
+        <div className="outcome-content">
+          {gameState === "enemy_vanquished" && (
+            <>
+              <h1>Enemy Vanquished</h1>
+              <h2>Click to find your next opponent</h2>
+            </>
+          )}
+          {gameState === "player_lost" && (
+            <>
+              <h1>You've lost</h1>
+              <h2>Don't give up! Keep on fighting</h2>
+            </>
+          )}
+        </div>
+      </div>
+        )}
       <div className='health-bars-container'>
         <HealthBar health={playerhealth} maxHealth={100} name="Meowric" />
         <HealthBar health={bosshealth} maxHealth={boss.health} name={boss.name} />
@@ -197,10 +236,14 @@ function GameScreen({boss, onRun}) {
       <div className='fight-container' style={{backgroundImage: `url(${boss.backgroundImage})`}}>
         <div className='sprite-container'>
         <div className="meowric-container">
+        { gameState !== 'player_lost' &&
           <img src="meowric_sprite.png" className='meowric'/>
+        }
         </div>
         <div className="enemy-container">
+          { gameState !== 'enemy_vanquished' &&
           <img src={boss.sprite}  className='enemy'/>
+          }
         </div>
         </div>
       <div className='dialog-box'>
