@@ -84,8 +84,8 @@
 
 .sequence-dot {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 80px;
+  height: 80px;
   background: white;
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -109,4 +109,9 @@
   display: flex;
   justify-content: center;
   margin-top: 50px;
+}
+
+.sequence-dot.clicked {
+  background-color: red;
+  opacity: 1;
 }

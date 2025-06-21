@@ -11,8 +11,11 @@ function GameScreen({boss}) {
   const [sequence, setSequence] = useState([]);
   const [sequenceState, setSequenceState] = useState(''); // 'sequence', 'player_input'
   const [playerInput, setPlayerInput] = useState([]);
+  const [dodgeSequence, setDodgeSequence] = useState(false);
+  const [enemyDamage, setEnemyDamage] = useState(0);
   const [dots, setDots] = useState([]);
   const [activeDot, setActiveDot] = useState(null);
+  const [clickedDots, setClickedDots] = useState([]);
 
   const generateDots = () => {
     const newDots = Array.from({ length: 5 }, (_, i) => ({
@@ -22,16 +25,19 @@ function GameScreen({boss}) {
       active: false
     }));
     setDots(newDots);
+    setClickedDots([]);
     return newDots;
   }
 
-  const startSequence = (ability) => {
+  const startSequence = (ability, isDodge = false) => {
     const newDots = generateDots();
     const newSequence = newDots.sort(() => 0.5 - Math.random()).slice(0, 5);
 
     setSequence(newSequence);
     setSequenceState('sequence');
     setPlayerInput([]);
+    console.log(isDodge);
+    setDodgeSequence(isDodge);
     setGameState('sequence');
     playSequence(newSequence);
   }
@@ -54,66 +60,141 @@ function GameScreen({boss}) {
     
     const newInput = [...playerInput, dotId];
     setPlayerInput(newInput);
+    setClickedDots([...clickedDots, dotId]); // Add clicked dot to the array
     
-     // Check if the current input matches the sequence up to this point
-  const isCorrectSoFar = newInput.every((inputDot, i) => inputDot === sequence[i].id);
+    // Check if the current input matches the sequence up to this point
+    const isCorrectSoFar = newInput.every((inputDot, i) => inputDot === sequence[i].id);
 
-  if (isCorrectSoFar) {
-    const baseDamage = 10; 
-    const damage = baseDamage * newInput.length; 
+    if (isCorrectSoFar) {
+      if (!dodgeSequence) {
+        if (ability === 'Mighty Scratch' || ability === 'Pawerful Pounce') {
+          const baseDamage = 5; 
+          const damage = baseDamage * newInput.length; 
 
-    if (newInput.length === sequence.length) {
+          if (newInput.length === sequence.length) {
+            setSequenceState('success');
+            setTimeout(() => {
+              setClickedDots([]);
+              setBossHealth(prev => Math.max(0, prev - damage));
+              setAbility(null);
+              setGameState('enemy_attack');
+              setSequenceState('');
+            }, 1000);
+          }
+        } else if (ability === 'Nutritious Milk') {
 
-      setTimeout(() => {
-        setSequenceState('success');
-      }, 3000);
-      
-      setBossHealth(prev => Math.max(0, prev - damage));
-      setAbility(null);
-      setGameState('start');
+          const baseHeal = 5;
+          const healAmount = baseHeal * newInput.length;
+
+          if (newInput.length === sequence.length) {
+            console.log("hello");
+            setSequenceState('success');
+            setTimeout(() => {
+              setClickedDots([]);
+              console.log(healAmount)
+              setPlayerHealth(prev => Math.min(100, prev + healAmount));
+              setAbility(null);
+              setGameState('enemy_attack');
+              setSequenceState('');
+            }, 1000);
+          }
+        }
+      } else {
+        // Dodge sequence success
+        if (newInput.length === sequence.length) {
+          setSequenceState('dodge_success');
+          setTimeout(() => {
+            setClickedDots([]);
+            setAbility(null);
+            setDodgeSequence(false);
+            setGameState('start');
+            setSequenceState('');
+          }, 1000);
+        }
+      }
+    } else {
+      console.log("failed hello");
+      if (!dodgeSequence) {
+        setSequenceState('failed');
+        setTimeout(() => {
+          setClickedDots([]);
+          const penaltyDamage = 5; 
+          setBossHealth(prev => Math.max(0, prev - penaltyDamage));
+          setPlayerInput([]); 
+          setGameState('enemy_attack');
+          setSequenceState('');
+          setAbility(null);
+        }, 1000);
+      } else {
+        // Failed dodge sequence
+        setSequenceState('dodge_failed');
+        setTimeout(() => {
+          setClickedDots([]);
+          setPlayerHealth(prev => Math.max(0, prev - enemyDamage));
+          setDodgeSequence(false);
+          setGameState('start');
+          setSequenceState('');
+          setPlayerInput([]);
+        }, 1000);
+      }
     }
-  } else {
-
-    setTimeout(() => {
-      setSequenceState('failed');
-    }, 3000);
-
-    const penaltyDamage = 5; 
-    setBossHealth(prev => Math.max(0, prev - penaltyDamage));
-    setPlayerInput([]); 
-    setGameState('start');
-    setAbility(null);
-
-  }
   };
 
+  const enemyAttack = () => {
+    const damage = Math.floor(Math.random() * 15) + 10; // Random damage between 10-25
+    setEnemyDamage(damage); // Store damage for dodge sequence
+    
+    // Start dodge sequence instead of immediately applying damage
+    startSequence(null, true);
+  };
+
+  // Trigger enemy attack after player's turn
+  useEffect(() => {
+    if (gameState === 'enemy_attack') {
+      const timer = setTimeout(() => {
+        enemyAttack();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [gameState]);
 
   return (
     <div className="game-container">
-      {gameState === 'sequence' && (
-          <div className="sequence-container">
-          {sequenceState === "sequence" &&  <h2 className="sequence-title"> Remember the Sequence</h2>
-          }
-          {sequenceState === "player_input" &&  <h2 className="sequence-title">I hope you remembered... </h2>
-          }
-          {sequenceState === "success" &&  <h2 className="sequence-title">Perfect! </h2>
-          }
-          {sequenceState === "failed" &&  <h2 className="sequence-title">Failed </h2>
-          }
+      {(gameState === 'sequence' || sequenceState === 'success' || sequenceState === 'failed' || 
+        sequenceState === 'dodge_success' || sequenceState === 'dodge_failed') && (
+        <div className="sequence-container">
+          {sequenceState === "sequence" && (
+            <h2 className="sequence-title">
+              {dodgeSequence ? "Dodge! Remember the sequence!" : "Remember the Sequence"}
+            </h2>
+          )}
+          {sequenceState === "player_input" && (
+            <h2 className="sequence-title">
+              {dodgeSequence ? "Quick! Repeat the sequence to dodge!" : "I hope you remembered..."}
+            </h2>
+          )}
+          {sequenceState === "success" && <h2 className="sequence-title">Perfect! </h2>}
+          {sequenceState === "failed" && <h2 className="sequence-title">Failed </h2>}
+          {sequenceState === "dodge_success" && <h2 className="sequence-title">Dodged! </h2>}
+          {sequenceState === "dodge_failed" && <h2 className="sequence-title">Ouch! </h2>}
+          
           <div className="sequence-dots">
             {dots.map(dot => (
               <div
                 key={dot.id}
-                className={`sequence-dot ${activeDot === dot.id ? 'active' : ''}`}
+                className={`sequence-dot ${
+                  activeDot === dot.id ? 'active' : 
+                  clickedDots.includes(dot.id) ? 'clicked' : ''
+                }`}
                 style={{ left: `${dot.x}%`, top: `${dot.y}%` }}
                 onClick={() => handleDotClick(dot.id)}
               />
             ))}
           </div>
-          </div>
-        )}
+        </div>
+      )}
       <div className='health-bars-container'>
-        <HealthBar health={100} maxHealth={100} name="Meowric" />
+        <HealthBar health={playerhealth} maxHealth={100} name="Meowric" />
         <HealthBar health={bosshealth} maxHealth={boss.health} name={boss.name} />
       </div>
       <div className='fight-container'>
@@ -134,6 +215,9 @@ function GameScreen({boss}) {
         )}
         {((gameState === 'abilities' || gameState === 'sequence') && ability !== null) && (
           <p>You  used {ability}</p>
+        )}
+        {(gameState === 'enemy_attack' || dodgeSequence) && (
+          <p>{boss.name} used {boss.moves[0]}</p>
         )}
       </div>
       </div>
@@ -169,8 +253,8 @@ function GameScreen({boss}) {
                 color="#DD1A21"
               />
                <PixelButton
-                label="Nutririous Milk"
-                onClick={() => {  setAbility('Nutricious Milk'); startSequence('attack') }}
+                label="Nutritious Milk"
+                onClick={() => {  setAbility('Nutritious Milk'); startSequence('heal') }}
                 color="#6abc3a"
               />
                 <PixelButton
