@@ -5,19 +5,20 @@ import TitleScreen from './components/TitleScreen';
 import BossSelection from './components/BossSelection';
 
 const bosses = [
-  { name: 'sir william', health: 100, moves: ['slash', 'stab'], difficulty: 'easy', sprite: 'william_sprite.png', backgroundImage: 'william_bg.png' },
-  { name: 'rhaegal', health: 200, moves: ['slash', 'stab'], difficulty: 'medium', sprite: 'rhaegal_sprite.png', backgroundImage: 'william_bg.png' },
-  { name: 'vortal', health: 300, moves: ['slash', 's tab'], difficulty: 'hard', sprite: 'vortal_sprite.png', backgroundImage: 'william_bg.png ' }
+  { name: 'sir william', health: 100, moves: ['slash', 'stab'], difficulty: 'easy', sprite: 'william_sprite.png', backgroundImage: 'william_background.png' },
+  { name: 'rhaegal', health: 200, moves: ['slash', 'stab'], difficulty: 'medium', sprite: 'rhaegal_sprite.png', backgroundImage: 'rhaegal_background.png' },
+  { name: 'vortal', health: 300, moves: ['slash', 's tab'], difficulty: 'hard', sprite: 'vortal_sprite.png', backgroundImage: 'vortal_background.png ' }
 ]
 
 function App() {
   const [gameState, setGameState] = useState("title"); // title, boss, fight
   const [selectedBoss, setSelectedBoss] = useState(null);
   const startGame = () => { setGameState("boss");}
+  const returnToBossSelection = () => {
+    setGameState("boss");
+  }
   const selectBoss = (boss) => { 
-    console.log("Selected Boss:", boss);
     const bossData = bosses.find(b => b.name === boss);
-    console.log("Boss Data:", bossData);
     setSelectedBoss(bossData);
     setGameState("fight");
   }
@@ -25,7 +26,7 @@ function App() {
     <>
       {gameState === "title" && <TitleScreen  onStart={startGame} />}
       {gameState === "boss" && <BossSelection onBossSelect={selectBoss} />}
-      {gameState === "fight" && <GameScreen boss={selectedBoss} />}
+      {gameState === "fight" && <GameScreen boss={selectedBoss} onRun={returnToBossSelection}  />}
     </>
   );
 }

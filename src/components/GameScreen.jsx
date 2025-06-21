@@ -3,11 +3,11 @@ import PixelButton from './common/PixelButton';
 import './styles/fight.css';
 import React, { useState, useEffect } from 'react';
 
-function GameScreen({boss}) {
+function GameScreen({boss, onRun}) {
   const [gameState, setGameState] = useState('start'); // 'start', 'abilities', 'blank'
   const [ability, setAbility] = useState(null);
   const [playerhealth, setPlayerHealth] = useState(100);
-  const [bosshealth, setBossHealth] = useState(100);
+  const [bosshealth, setBossHealth] = useState(boss.health);
   const [sequence, setSequence] = useState([]);
   const [sequenceState, setSequenceState] = useState(''); // 'sequence', 'player_input'
   const [playerInput, setPlayerInput] = useState([]);
@@ -87,11 +87,9 @@ function GameScreen({boss}) {
           const healAmount = baseHeal * newInput.length;
 
           if (newInput.length === sequence.length) {
-            console.log("hello");
             setSequenceState('success');
             setTimeout(() => {
               setClickedDots([]);
-              console.log(healAmount)
               setPlayerHealth(prev => Math.min(100, prev + healAmount));
               setAbility(null);
               setGameState('enemy_attack');
@@ -113,7 +111,6 @@ function GameScreen({boss}) {
         }
       }
     } else {
-      console.log("failed hello");
       if (!dodgeSequence) {
         setSequenceState('failed');
         setTimeout(() => {
@@ -197,7 +194,7 @@ function GameScreen({boss}) {
         <HealthBar health={playerhealth} maxHealth={100} name="Meowric" />
         <HealthBar health={bosshealth} maxHealth={boss.health} name={boss.name} />
       </div>
-      <div className='fight-container'>
+      <div className='fight-container' style={{backgroundImage: `url(${boss.backgroundImage})`}}>
         <div className='sprite-container'>
         <div className="meowric-container">
           <img src="meowric_sprite.png" className='meowric'/>
@@ -219,6 +216,11 @@ function GameScreen({boss}) {
         {(gameState === 'enemy_attack' || dodgeSequence) && (
           <p>{boss.name} used {boss.moves[0]}</p>
         )}
+        {gameState === 'running' && (
+          <div className="dialog-box">
+            <p>Got away safely!</p>
+          </div>
+        )}
       </div>
       </div>
       
@@ -233,7 +235,7 @@ function GameScreen({boss}) {
             />
             <PixelButton
             label="Run"
-            onClick={() => setGameState('abilities')}
+            onClick={onRun}
             color="#6abc3a"
             />
             </>
