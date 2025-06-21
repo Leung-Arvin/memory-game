@@ -9,6 +9,7 @@ export default function MusicDisclaimer({onAccept, onDecline}) {
       </h1>
       <PixelButton label="Allow Music" color="#6abc3a" onClick={() => onAccept()} />
       <PixelButton label="Continue without Music" color="#DD1A21" onClick={() => onDecline()}/>
+        <p>Press esc key to change sound settings</p>
     </div>
   );
 }

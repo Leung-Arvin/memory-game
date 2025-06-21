@@ -1,0 +1,47 @@
+/* styles/sound-settings.css */
+.sound-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.sound-settings-container {
+  background-color: #ff5656;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 4px solid #fafafa;
+  width: 80%;
+  max-width: 400px;
+}
+
+.sound-option {
+  margin: 1.5rem;
+}
+
+.sound-option label {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.sound-option input[type="checkbox"] {
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+.sound-option input[type="range"] {
+  width: 100%;
+  height: 8px;
+  background: #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
