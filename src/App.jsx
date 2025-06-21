@@ -10,32 +10,35 @@ const bosses = [
   {
     name: "sir william",
     health: 100,
-    moves: ["slash", "stab"],
+    moves: ["Venerable Slash", "Hesitant Strike", "Oathbreaker's Lament"],
     difficulty: "easy",
     sprite: "william_sprite.png",
     backgroundImage: "william_background.png",
     music: "battle_theme1.mp3",
-    className: "william-fight"
+    className: "william-fight",
+    meowric_health: 100
   },
   {
     name: "rhaegal",
-    health: 200,
-    moves: ["slash", "stab"],
+    health: 300,
+    moves: ["Crimson Feast", "Sanguine Storm", "Moonlit Blitz"],
     difficulty: "medium",
     sprite: "rhaegal_sprite.png",
     backgroundImage: "rhaegal_background.png",
     music: "battle_theme2.mp3",
-    className: "rhaegal-fight"
+    className: "rhaegal-fight",
+    meowric_health: 200
   },
   {
     name: "vortal",
-    health: 300,
-    moves: ["slash", "s tab"],
+    health: 500,
+    moves: ["Cosmic Rupture", "Oblivion's Maw", "Fateweaver's Calling", "Godspeed"],
     difficulty: "hard",
     sprite: "vortal_sprite.png",
     backgroundImage: "vortal_background.png ",
     music: "battle_theme3.mp3",
-    className: "vortal-fight"
+    className: "vortal-fight",
+    meowric_health: 200
   },
 ];
 
