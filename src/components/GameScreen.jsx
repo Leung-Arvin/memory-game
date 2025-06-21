@@ -168,6 +168,7 @@ function GameScreen({boss, onRun}) {
     if (playerhealth <= 0) {
       setGameState('player_lost');
     }
+    console.log(boss.className)
   }, [playerhealth]);
 
   const returnToBossMenu = () => {
@@ -242,7 +243,7 @@ function GameScreen({boss, onRun}) {
         </div>
         <div className="enemy-container">
           { gameState !== 'enemy_vanquished' &&
-          <img src={boss.sprite}  className='enemy'/>
+            <img src={boss.sprite} className={`${boss.className}`} />
           }
         </div>
         </div>

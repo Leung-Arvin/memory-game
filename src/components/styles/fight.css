@@ -21,9 +21,32 @@
   margin-top: 150px;
 }
 
-.enemy {
+.william-fight {
   height: 400px;
   width: 230px;
+  filter: 
+    drop-shadow(0 0 2px #fff) 
+    drop-shadow(0 0 4px #ffffff) 
+    drop-shadow(0 0 6px #ffffff); 
+}
+
+.rhaegal-fight {
+  height: 700px;
+  width: 700px;
+  margin-bottom: 200px;
+  filter: 
+    drop-shadow(0 0 2px #fff) 
+    drop-shadow(0 0 4px #da0808) 
+    drop-shadow(0 0 6px #000000); 
+}
+
+.vortal-fight {
+  height: 500px;
+  width: 500px;
+  filter: 
+    drop-shadow(0 0 2px #fff) 
+    drop-shadow(0 0 4px #ff00ff) 
+    drop-shadow(0 0 6px #00ffff); 
 }
 
 .health-bars-container {
