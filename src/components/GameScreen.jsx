@@ -4,7 +4,7 @@ import './styles/fight.css';
 import React, { useState, useEffect } from 'react';
 
 function GameScreen({boss, onRun}) {
-  const [gameState, setGameState] = useState('start'); 
+  const [gameState, setGameState] = useState('player_lost'); 
   const [ability, setAbility] = useState(null);
   const [playerhealth, setPlayerHealth] = useState(100);
   const [bosshealth, setBossHealth] = useState(boss.health);
@@ -68,7 +68,7 @@ function GameScreen({boss, onRun}) {
     if (isCorrectSoFar) {
       if (!dodgeSequence) {
         if (ability === 'Mighty Scratch' || ability === 'Pawerful Pounce') {
-          const baseDamage = 100; 
+          const baseDamage = 15; 
           const damage = baseDamage * newInput.length; 
 
           if (newInput.length === sequence.length) {
