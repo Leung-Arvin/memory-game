@@ -4,7 +4,7 @@ import './styles/fight.css';
 import React, { useState, useEffect } from 'react';
 
 function GameScreen({boss, onRun}) {
-  const [gameState, setGameState] = useState('player_lost'); 
+  const [gameState, setGameState] = useState('start'); 
   const [ability, setAbility] = useState(null);
   const [playerhealth, setPlayerHealth] = useState(100);
   const [bosshealth, setBossHealth] = useState(boss.health);
