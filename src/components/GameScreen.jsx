@@ -36,7 +36,6 @@ function GameScreen({boss, onRun}) {
     setSequence(newSequence);
     setSequenceState('sequence');
     setPlayerInput([]);
-    console.log(isDodge);
     setDodgeSequence(isDodge);
     setGameState('sequence');
     playSequence(newSequence);
@@ -242,7 +241,7 @@ function GameScreen({boss, onRun}) {
         </div>
         <div className="enemy-container">
           { gameState !== 'enemy_vanquished' &&
-          <img src={boss.sprite}  className='enemy'/>
+            <img src={boss.sprite} className={`${boss.className}`} />
           }
         </div>
         </div>
