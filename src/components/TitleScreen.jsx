@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/TitleScreen.css"; 
+import "./styles/titlescreen.css"; 
 
 const TitleScreen = ({ onStart }) => {
   return (
