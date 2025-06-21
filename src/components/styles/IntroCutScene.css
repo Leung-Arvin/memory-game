@@ -1,0 +1,85 @@
+.cutscene-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.character {
+  position: absolute;
+  bottom: 300px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  will-change: transform;
+  transition: left 0.1s ease-out;
+}
+.character.running {
+  width: 141px;
+  height: 231px;
+
+  background-image: url("./Meow-Knight_Run.png");
+  background-size: 141px 924px;
+
+  animation: runningAnimation 1s steps(4) infinite;
+
+  image-rendering: pixelated;
+}
+
+@keyframes runningAnimation {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -924px;
+  }
+}
+
+.character.idle {
+  width: 141px;
+  height: 214px;
+  background-size: 141px 1285px;
+  animation: idleAnimation 1s steps(6) infinite;
+  image-rendering: pixelated;
+}
+
+.character.left {
+  transform: scaleX(-1);
+}
+
+.character.right {
+  transform: scaleX(1);
+}
+@keyframes idleAnimation {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -1285px;
+  }
+}
+.hint-text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-family: "Press Start 2P", cursive;
+  font-size: 14px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-align: center;
+  z-index: 10;
+}
+
+.cutscene-text {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  font-family: "Press Start 2P", monospace;
+  font-size: 38px;
+  background-color: black;
+}
