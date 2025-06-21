@@ -1,9 +1,19 @@
 .fight-container {
-  background-image: url('william_background.png');
+  background-image: url("william_background.png");
   height: 70vh;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+}
+
+h3 {
+  font-family: "Press Start 2P", cursive;
+  font-size: 40px;
+  font-weight: 200;
+  line-height: 98px;
+  color: #ffffff;
+  -webkit-text-stroke: 4px #000000;
+  text-shadow: 4px 4px 3.6px #000000;
 }
 
 .sprite-container {
@@ -50,28 +60,29 @@
 }
 
 .dialog-box {
-  position: absolute;  
-  top: 89%;  
+  position: absolute;
+  top: 89%;
   background-color: black;
   padding: 20px;
   font-size: 30px;
 }
 
 .dialog-box p {
-  overflow: hidden; 
-  white-space: nowrap; 
-  margin: 0 auto; 
-  letter-spacing: .15em; 
-  animation: 
-    typing 1.0s steps(10, end)
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.15em;
+  animation: typing 1s steps(10, end);
 }
 
 @keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
-
-
 
 .sequence-dots {
   position: absolute;
@@ -101,7 +112,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  background-color:rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 20;
 }
 
@@ -109,4 +120,27 @@
   display: flex;
   justify-content: center;
   margin-top: 50px;
+}
+
+.floating-damage {
+  position: absolute;
+  font-size: 24px;
+  color: red;
+  font-weight: bold;
+  animation: floatFade 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+  text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000,
+    -2px 2px 0 #000;
+}
+
+@keyframes floatFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
 }
