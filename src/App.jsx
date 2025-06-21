@@ -32,7 +32,7 @@ const bosses = [
   {
     name: "vortal",
     health: 300,
-    moves: ["slash", "s tab"],
+    moves: ["slash", "stab"],
     difficulty: "hard",
     sprite: "vortal_sprite.png",
     backgroundImage: "vortal_background.png ",
@@ -74,8 +74,18 @@ function App() {
   };
   const selectBoss = (boss) => {
     const bossData = bosses.find((b) => b.name === boss);
+    setCurrentSong(bossData.music);
     setSelectedBoss(bossData);
     setGameState("fight");
+  };
+  const handleMusicAccept = () => {
+    setMusicEnabled(true);
+    setGameState("title");
+  };
+
+  const handleMusicDecline = () => {
+    setMusicEnabled(false);
+    setGameState("title");
   };
   return (
     <>
