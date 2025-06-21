@@ -46,7 +46,6 @@ function App() {
   const [currentSong, setCurrentSong] = useState("title_theme.mp3");
  
   useEffect(() => {
-    console.log(`/music/${currentSong}`)
     if(musicEnabled) {
       const backgroundMusic = new Howl({
         src: [`/music/${currentSong}`],

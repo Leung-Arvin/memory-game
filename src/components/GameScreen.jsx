@@ -36,7 +36,6 @@ function GameScreen({boss, onRun}) {
     setSequence(newSequence);
     setSequenceState('sequence');
     setPlayerInput([]);
-    console.log(isDodge);
     setDodgeSequence(isDodge);
     setGameState('sequence');
     playSequence(newSequence);
@@ -168,7 +167,6 @@ function GameScreen({boss, onRun}) {
     if (playerhealth <= 0) {
       setGameState('player_lost');
     }
-    console.log(boss.className)
   }, [playerhealth]);
 
   const returnToBossMenu = () => {
