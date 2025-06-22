@@ -4,6 +4,7 @@ import GameScreen from "./components/GameScreen";
 import TitleScreen from "./components/TitleScreen";
 import BossSelection from "./components/BossSelection";
 import MusicDisclaimer from "./components/MusicDisclaimer";
+import SoundSettings from "./components/soundSettings";
 import { Howl } from "howler";
 
 const bosses = [
@@ -44,7 +45,29 @@ function App() {
   const [selectedBoss, setSelectedBoss] = useState(null);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [currentSong, setCurrentSong] = useState("title_theme.mp3");
- 
+  const [showSettings, setShowSettings] = useState(false);
+  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(true);
+  const [musicVolume, setMusicVolume] = useState(0.7);
+  const [effectsVolume, setEffectsVolume] = useState(0.8);
+  
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowSettings(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Apply volume changes to Howler
+  useEffect(() => {
+    if (window.Howler) {
+      window.Howler.volume(musicVolume);
+    }
+  }, [musicVolume]);
+
   useEffect(() => {
     if(musicEnabled) {
       const backgroundMusic = new Howl({
@@ -92,6 +115,18 @@ function App() {
       {gameState === "fight" && (
         <GameScreen boss={selectedBoss} onRun={returnToBossSelection} />
       )}
+       <SoundSettings 
+        isVisible={showSettings}
+        onClose={() => setShowSettings(false)}
+        musicEnabled={musicEnabled}
+        setMusicEnabled={setMusicEnabled}
+        soundEffectsEnabled={soundEffectsEnabled}
+        setSoundEffectsEnabled={setSoundEffectsEnabled}
+        musicVolume={musicVolume}
+        setMusicVolume={setMusicVolume}
+        effectsVolume={effectsVolume}
+        setEffectsVolume={setEffectsVolume}
+      />
     </>
   );
 }

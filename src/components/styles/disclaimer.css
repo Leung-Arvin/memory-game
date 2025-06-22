@@ -6,4 +6,5 @@
   justify-content: center;
   flex-direction: column;
   min-width: 300px;
+  gap: 20px;
 }
