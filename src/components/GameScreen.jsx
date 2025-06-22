@@ -27,7 +27,7 @@ const correctSound = new Howl({
 function GameScreen({ boss, onRun }) {
   const [gameState, setGameState] = useState("start");
   const [ability, setAbility] = useState(null);
-  const [playerhealth, setPlayerHealth] = useState(100);
+  const [playerhealth, setPlayerHealth] = useState(boss.meowric_health);
   const [bosshealth, setBossHealth] = useState(boss.health);
   const [sequence, setSequence] = useState([]);
   const [sequenceState, setSequenceState] = useState(""); // 'sequence', 'player_input'
@@ -37,9 +37,22 @@ function GameScreen({ boss, onRun }) {
   const [dots, setDots] = useState([]);
   const [activeDot, setActiveDot] = useState(null);
   const [clickedDots, setClickedDots] = useState([]);
+  const [currentBossMove, setCurrentBossMove] = useState("");
+
+  let numberOfDots;
 
   const generateDots = () => {
-    const newDots = Array.from({ length: 5 }, (_, i) => ({
+    switch (boss.difficulty) {
+      case "easy":
+        numberOfDots = 5;
+        break;
+      case "medium":
+        numberOfDots = 6;
+        break;
+      default:
+        numberOfDots = 7;
+    }
+    const newDots = Array.from({ length: numberOfDots }, (_, i) => ({
       id: i,
       x: Math.random() * 80 + 10,
       y: Math.random() * 60 + 20,
@@ -52,7 +65,9 @@ function GameScreen({ boss, onRun }) {
 
   const startSequence = (ability, isDodge = false) => {
     const newDots = generateDots();
-    const newSequence = newDots.sort(() => 0.5 - Math.random()).slice(0, 5);
+    const newSequence = newDots
+      .sort(() => 0.5 - Math.random())
+      .slice(0, numberOfDots);
 
     setSequence(newSequence);
     setSequenceState("sequence");
@@ -64,10 +79,25 @@ function GameScreen({ boss, onRun }) {
 
   const playSequence = (seq) => {
     seq.forEach((dot, i) => {
-      setTimeout(() => {
-        setActiveDot(dot.id);
-        setTimeout(() => setActiveDot(null), 500); // Each dot blinks for 500ms
-      }, i * 800); // 800ms between dots
+      switch (boss.difficulty) {
+        case "easy":
+          setTimeout(() => {
+            setActiveDot(dot.id);
+            setTimeout(() => setActiveDot(null), 500);
+          }, i * 800); // 800ms between dots
+          break;
+        case "medium":
+          setTimeout(() => {
+            setActiveDot(dot.id);
+            setTimeout(() => setActiveDot(null), 400);
+          }, i * 800); // 800ms between dots
+          break;
+        default:
+          setTimeout(() => {
+            setActiveDot(dot.id);
+            setTimeout(() => setActiveDot(null), 300);
+          }, i * 800); // 800ms between dots
+      }
     });
     const totalSequenceTime = seq.length * 800 + 500; // (800ms per dot + last dot's 500ms blink)
     setTimeout(() => {
@@ -91,7 +121,17 @@ function GameScreen({ boss, onRun }) {
     if (isCorrectSoFar) {
       if (!dodgeSequence) {
         if (ability === "Mighty Scratch" || ability === "Pawerful Pounce") {
-          const baseDamage = 15;
+          let baseDamage;
+          switch (boss.difficulty) {
+            case "easy":
+              baseDamage = 5;
+              break;
+            case "medium":
+              baseDamage = 15;
+              break;
+            default:
+              baseDamage = 20;
+          }
           const damage = baseDamage * newInput.length;
 
           if (newInput.length === sequence.length) {
@@ -105,15 +145,12 @@ function GameScreen({ boss, onRun }) {
             }, 1000);
           }
         } else if (ability === "Nutritious Milk") {
-          const baseHeal = 5;
-          const healAmount = baseHeal * newInput.length;
-
           if (newInput.length === sequence.length) {
             setSequenceState("success");
             setTimeout(() => {
               correctSound.play();
               setClickedDots([]);
-              setPlayerHealth((prev) => Math.min(100, prev + healAmount));
+              setPlayerHealth(boss.meowric_health);
               setAbility(null);
               setGameState("enemy_attack");
               setSequenceState("");
@@ -139,8 +176,18 @@ function GameScreen({ boss, onRun }) {
         setSequenceState("failed");
         failedSound.play();
         setTimeout(() => {
+          let penaltyDamage;
+          switch (boss.difficulty) {
+            case "easy":
+              penaltyDamage = 10;
+              break;
+            case "medium":
+              penaltyDamage = 25;
+              break;
+            default:
+              penaltyDamage = 50;
+          }
           setClickedDots([]);
-          const penaltyDamage = 5;
           setBossHealth((prev) => Math.max(0, prev - penaltyDamage));
           setPlayerInput([]);
           setGameState("enemy_attack");
@@ -164,9 +211,21 @@ function GameScreen({ boss, onRun }) {
   };
 
   const enemyAttack = () => {
-    const damage = Math.floor(Math.random() * 15) + 10; // Random damage between 10-25
+    let damage;
+    switch (boss.difficulty) {
+      case "easy":
+        damage = Math.floor(Math.random() * 15) + 15;
+        break;
+      case "medium":
+        damage = Math.floor(Math.random() * 15) + 40;
+        break;
+      default:
+        damage = Math.floor(Math.random() * 15) + 80;
+    }
     setEnemyDamage(damage); // Store damage for dodge sequence
-
+    setCurrentBossMove(
+      boss.moves[Math.floor(Math.random() * boss.moves.length)]
+    );
     // Start dodge sequence instead of immediately applying damage
     startSequence(null, true);
   };
@@ -277,7 +336,11 @@ function GameScreen({ boss, onRun }) {
         </div>
       )}
       <div className="health-bars-container">
-        <HealthBar health={playerhealth} maxHealth={100} name="Meowric" />
+        <HealthBar
+          health={playerhealth}
+          maxHealth={boss.meowric_health}
+          name="Meowric"
+        />
         <HealthBar
           health={bosshealth}
           maxHealth={boss.health}
@@ -307,7 +370,7 @@ function GameScreen({ boss, onRun }) {
             ability !== null && <p>You used {ability}</p>}
           {(gameState === "enemy_attack" || dodgeSequence) && (
             <p>
-              {boss.name} used {boss.moves[0]}
+              {boss.name} used {currentBossMove}
             </p>
           )}
           {gameState === "running" && (

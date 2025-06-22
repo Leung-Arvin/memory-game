@@ -4,6 +4,7 @@ import GameScreen from "./components/GameScreen";
 import TitleScreen from "./components/TitleScreen";
 import BossSelection from "./components/BossSelection";
 import MusicDisclaimer from "./components/MusicDisclaimer";
+import SoundSettings from "./components/soundSettings";
 import { Howl } from "howler";
 import IntroText from "./components/IntroText";
 import IntroCutScene from "./components/IntroCutScene";
@@ -12,32 +13,40 @@ const bosses = [
   {
     name: "sir william",
     health: 100,
-    moves: ["slash", "stab"],
+    moves: ["Venerable Slash", "Hesitant Strike", "Oathbreaker's Lament"],
     difficulty: "easy",
     sprite: "william_sprite.png",
     backgroundImage: "william_background.png",
     music: "battle_theme1.mp3",
     className: "william-fight",
+    meowric_health: 100,
   },
   {
     name: "rhaegal",
-    health: 200,
-    moves: ["slash", "stab"],
+    health: 300,
+    moves: ["Crimson Feast", "Sanguine Storm", "Moonlit Blitz"],
     difficulty: "medium",
     sprite: "rhaegal_sprite.png",
     backgroundImage: "rhaegal_background.png",
     music: "battle_theme2.mp3",
     className: "rhaegal-fight",
+    meowric_health: 200,
   },
   {
     name: "vortal",
-    health: 300,
-    moves: ["slash", "stab"],
+    health: 500,
+    moves: [
+      "Cosmic Rupture",
+      "Oblivion's Maw",
+      "Fateweaver's Calling",
+      "Godspeed",
+    ],
     difficulty: "hard",
     sprite: "vortal_sprite.png",
     backgroundImage: "vortal_background.png ",
     music: "battle_theme3.mp3",
     className: "vortal-fight",
+    meowric_health: 200,
   },
 ];
 
@@ -53,6 +62,29 @@ function App() {
   const [selectedBoss, setSelectedBoss] = useState(null);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [currentSong, setCurrentSong] = useState("title_theme.mp3");
+  const [showSettings, setShowSettings] = useState(false);
+  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(true);
+  const [musicVolume, setMusicVolume] = useState(0.7);
+  const [effectsVolume, setEffectsVolume] = useState(0.8);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setShowSettings((prev) => !prev);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Apply volume changes to Howler
+  useEffect(() => {
+    if (window.Howler) {
+      window.Howler.volume(musicVolume);
+    }
+  }, [musicVolume]);
+
   const [sfxEnabled, setSfxEnabled] = useState(true);
 
   const playSound = (soundName) => {
@@ -140,6 +172,18 @@ function App() {
       {gameState === "fight" && (
         <GameScreen boss={selectedBoss} onRun={returnToBossSelection} />
       )}
+      <SoundSettings
+        isVisible={showSettings}
+        onClose={() => setShowSettings(false)}
+        musicEnabled={musicEnabled}
+        setMusicEnabled={setMusicEnabled}
+        soundEffectsEnabled={soundEffectsEnabled}
+        setSoundEffectsEnabled={setSoundEffectsEnabled}
+        musicVolume={musicVolume}
+        setMusicVolume={setMusicVolume}
+        effectsVolume={effectsVolume}
+        setEffectsVolume={setEffectsVolume}
+      />
     </>
   );
 }
