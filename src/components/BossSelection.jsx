@@ -1,7 +1,7 @@
 import './styles/boss-selection.css'
 import './styles/healthbar.css'
 
-export default function BossSelection({onBossSelect}) {
+export default function BossSelection({onBossSelect, setGameState}) {
 
   const handleBossSelection = (boss) => {
     onBossSelect(boss); 
@@ -9,6 +9,7 @@ export default function BossSelection({onBossSelect}) {
 
   return (
     <div className='boss-selection'>
+      <a className='return-button' onClick={() => {setGameState('title')}}> Scared already? Return to Titlescreen</a>
       <h1 className="bossTitle">A couple of people are after your last life...
       Select one to deal with
       </h1>

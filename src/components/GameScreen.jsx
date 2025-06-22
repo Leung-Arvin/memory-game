@@ -22,9 +22,7 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
   gameState === "abilities" ||
   (gameState === "sequence" && ability !== null) ||
   (gameState === "enemy_attack" ) ||
-  gameState === "running" ||
-  gameState === "enemy_vanquished" ||
-  gameState === "player_lost";
+  gameState === "running";
   let numberOfDots;
 
 

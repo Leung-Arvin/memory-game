@@ -110,6 +110,9 @@
   height: 80px;
   background: white;
   border-radius: 50%;
+  border: 5px;
+  border-color: #000000;
+  border-style: solid;
   transform: translate(-50%, -50%);
   cursor: pointer;
   transition: background 0.2s;
