@@ -181,7 +181,7 @@ function App() {
           }}
         />
       )}
-      {gameState === "boss" && <BossSelection onBossSelect={selectBoss} />}
+      {gameState === "boss" && <BossSelection onBossSelect={selectBoss} setGameState={setGameState} />}
       {gameState === "fight" && (
         <GameScreen
           boss={selectedBoss}
