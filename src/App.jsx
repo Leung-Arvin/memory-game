@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import GameScreen from "./components/GameScreen";
 import TitleScreen from "./components/TitleScreen";
@@ -50,22 +50,22 @@ const bosses = [
   },
 ];
 
-const soundEffects = {
+const getSoundEffects = (volume) => ({
   click: new Howl({
     src: ["/music/click.wav"],
-    volume: 0.3,
+    volume: volume,
   }),
-};
+});
 
 function App() {
-  const [gameState, setGameState] = useState("music_disclaimer"); // title → intro → boss → fight
+  const [gameState, setGameState] = useState("music_disclaimer");
   const [selectedBoss, setSelectedBoss] = useState(null);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [currentSong, setCurrentSong] = useState("title_theme.mp3");
   const [showSettings, setShowSettings] = useState(false);
   const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(true);
   const [musicVolume, setMusicVolume] = useState(0.7);
-  const [effectsVolume, setEffectsVolume] = useState(0.8);
+  const [effectsVolume, setEffectsVolume] = useState(0.5);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -78,21 +78,23 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Apply volume changes to Howler
+  // Apply volume changes to Howler music globally
   useEffect(() => {
     if (window.Howler) {
       window.Howler.volume(musicVolume);
     }
   }, [musicVolume]);
 
-  const [sfxEnabled, setSfxEnabled] = useState(true);
-
   const playSound = (soundName) => {
-    if (sfxEnabled && soundEffects[soundName]) {
-      soundEffects[soundName].play();
+    if (soundEffectsEnabled) {
+      const sfx = getSoundEffects(effectsVolume);
+      if (sfx[soundName]) {
+        sfx[soundName].play();
+      }
     }
   };
 
+  // Music playback on state change
   useEffect(() => {
     if (musicEnabled) {
       const backgroundMusic = new Howl({
@@ -107,10 +109,12 @@ function App() {
       };
     }
   }, [musicEnabled, currentSong]);
+
   const startGame = () => {
     playSound("click");
     setGameState("intro");
   };
+
   const handleIntroDone = () => {
     playSound("click");
     setGameState("cutscene");
@@ -121,6 +125,7 @@ function App() {
     setCurrentSong("title_theme.mp3");
     setGameState("boss");
   };
+
   const selectBoss = (boss) => {
     const bossData = bosses.find((b) => b.name === boss);
     setCurrentSong(bossData.music);
@@ -128,6 +133,7 @@ function App() {
     playSound("click");
     setGameState("fight");
   };
+
   const handleMusicAccept = () => {
     setMusicEnabled(true);
     setGameState("title");
@@ -137,6 +143,7 @@ function App() {
     setMusicEnabled(false);
     setGameState("title");
   };
+
   return (
     <>
       {gameState === "music_disclaimer" && (
@@ -151,7 +158,13 @@ function App() {
           }}
         />
       )}
-      {gameState === "intro" && <IntroText onDone={handleIntroDone} />}
+      {gameState === "intro" && (
+        <IntroText
+          onDone={handleIntroDone}
+          effectsVolume={effectsVolume}
+          sfxEnabled={soundEffectsEnabled}
+        />
+      )}
       {gameState === "cutscene" && (
         <IntroCutScene
           onFinish={() => {
@@ -170,7 +183,12 @@ function App() {
       )}
       {gameState === "boss" && <BossSelection onBossSelect={selectBoss} />}
       {gameState === "fight" && (
-        <GameScreen boss={selectedBoss} onRun={returnToBossSelection} />
+        <GameScreen
+          boss={selectedBoss}
+          onRun={returnToBossSelection}
+          effectsVolume={effectsVolume}
+          sfxEnabled={soundEffectsEnabled}
+        />
       )}
       <SoundSettings
         isVisible={showSettings}

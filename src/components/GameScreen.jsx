@@ -1,36 +1,52 @@
 import HealthBar from "./common/HealthBar";
 import PixelButton from "./common/PixelButton";
 import "./styles/fight.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Howl } from "howler";
 
-const clickSound = new Howl({
-  src: ["/music/click.wav"],
-  volume: 0.5,
-  preload: true,
-});
-const popSound = new Howl({
-  src: ["/music/pop.mp3"],
-  volume: 0.5,
-  preload: true,
-});
-const failedSound = new Howl({
-  src: ["/music/failed.mp3"],
-  volume: 0.7,
-  preload: true,
-});
-const correctSound = new Howl({
-  src: ["/music/correct.mp3"],
-  volume: 0.7,
-  preload: true,
-});
-function GameScreen({ boss, onRun }) {
+function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
+  const clickSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/click.wav"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
+  const popSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/pop.mp3"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
+  const failedSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/failed.mp3"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
+  const correctSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/correct.mp3"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
   const [gameState, setGameState] = useState("start");
   const [ability, setAbility] = useState(null);
   const [playerhealth, setPlayerHealth] = useState(boss.meowric_health);
   const [bosshealth, setBossHealth] = useState(boss.health);
   const [sequence, setSequence] = useState([]);
-  const [sequenceState, setSequenceState] = useState(""); // 'sequence', 'player_input'
+  const [sequenceState, setSequenceState] = useState("");
   const [playerInput, setPlayerInput] = useState([]);
   const [dodgeSequence, setDodgeSequence] = useState(false);
   const [enemyDamage, setEnemyDamage] = useState(0);
@@ -107,7 +123,7 @@ function GameScreen({ boss, onRun }) {
 
   const handleDotClick = (dotId) => {
     if (sequenceState !== "player_input") return;
-    popSound.play();
+    if (sfxEnabled) popSound.play();
 
     const newInput = [...playerInput, dotId];
     setPlayerInput(newInput);
@@ -137,7 +153,7 @@ function GameScreen({ boss, onRun }) {
           if (newInput.length === sequence.length) {
             setSequenceState("success");
             setTimeout(() => {
-              correctSound.play();
+              if (sfxEnabled) correctSound.play();
               setClickedDots([]);
               setBossHealth((prev) => Math.max(0, prev - damage));
               setAbility(null);
@@ -149,7 +165,7 @@ function GameScreen({ boss, onRun }) {
           if (newInput.length === sequence.length) {
             setSequenceState("success");
             setTimeout(() => {
-              correctSound.play();
+              if (sfxEnabled) correctSound.play();
               setClickedDots([]);
               setPlayerHealth(boss.meowric_health);
               setAbility(null);
@@ -163,7 +179,7 @@ function GameScreen({ boss, onRun }) {
         if (newInput.length === sequence.length) {
           setSequenceState("dodge_success");
           setTimeout(() => {
-            correctSound.play();
+            if (sfxEnabled) correctSound.play();
             setClickedDots([]);
             setAbility(null);
             setDodgeSequence(false);
@@ -175,7 +191,7 @@ function GameScreen({ boss, onRun }) {
     } else {
       if (!dodgeSequence) {
         setSequenceState("failed");
-        failedSound.play();
+        if (sfxEnabled) failedSound.play();
         setTimeout(() => {
           let penaltyDamage;
           switch (boss.difficulty) {
@@ -197,7 +213,7 @@ function GameScreen({ boss, onRun }) {
         }, 1000);
       } else {
         // Failed dodge sequence
-        failedSound.play();
+        if (sfxEnabled) failedSound.play();
         setSequenceState("dodge_failed");
         setTimeout(() => {
           setClickedDots([]);
@@ -309,7 +325,7 @@ function GameScreen({ boss, onRun }) {
                 }`}
                 style={{ left: `${dot.x}%`, top: `${dot.y}%` }}
                 onClick={() => {
-                  popSound.play();
+                  if (sfxEnabled) popSound.play();
                   handleDotClick(dot.id);
                 }}
               />
@@ -388,7 +404,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Attack"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 setGameState("abilities");
               }}
               color="#DD1A21"
@@ -396,7 +412,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Run"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 onRun();
               }}
               color="#6abc3a"
@@ -408,7 +424,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Mighty Scratch"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 setAbility("Mighty Scratch");
                 startSequence("attack");
               }}
@@ -417,7 +433,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Pawerful Pounce"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 setAbility("Pawerful Pounce");
                 startSequence("attack");
               }}
@@ -426,7 +442,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Nutritious Milk"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 setAbility("Nutritious Milk");
                 startSequence("heal");
               }}
@@ -435,7 +451,7 @@ function GameScreen({ boss, onRun }) {
             <PixelButton
               label="Cancel"
               onClick={() => {
-                clickSound.play();
+                if (sfxEnabled) clickSound.play();
                 setGameState("start");
               }}
               color="#7C7C3C"

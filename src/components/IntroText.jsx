@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./styles/IntroText.css";
 import { Howl } from "howler";
 
@@ -10,15 +10,7 @@ const paragraphs = [
   `ONE QUEST.\nONE LAST CHANCE.\nIF HE FALLS...\nHE FALLS FOR GOOD.`,
 ];
 
-const typingSound = new Howl({
-  src: ["/music/typing.mp3"],
-  volume: 0.3,
-  loop: true,
-  preload: true,
-  onloaderror: () => console.error("Failed to load typing sound"),
-});
-
-export default function IntroText({ onDone }) {
+export default function IntroText({ onDone, effectsVolume, sfxEnabled }) {
   const [paraIndex, setParaIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [completed, setCompleted] = useState(false);
@@ -26,7 +18,15 @@ export default function IntroText({ onDone }) {
 
   const currentParagraph = paragraphs[paraIndex];
 
-  // Typing effect
+  const typingSound = useMemo(() => {
+    return new Howl({
+      src: ["/music/typing.mp3"],
+      volume: effectsVolume,
+      loop: true,
+      preload: true,
+    });
+  }, [effectsVolume]);
+
   useEffect(() => {
     if (!completed && charIndex < currentParagraph.length) {
       const timeout = setTimeout(() => {
@@ -36,27 +36,23 @@ export default function IntroText({ onDone }) {
     }
   }, [charIndex, completed, currentParagraph.length]);
 
-  // Sound control
   useEffect(() => {
     if (!completed && charIndex < currentParagraph.length) {
-      if (!typingSound.playing()) {
+      if (sfxEnabled && !typingSound.playing()) {
         typingSound.play();
       }
     } else {
       typingSound.stop();
     }
-  }, [charIndex, completed]);
+  }, [charIndex, completed, sfxEnabled, typingSound]);
 
-  // Keyboard handler
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Enter") {
         if (!completed) {
-          // Finish typing
           setCharIndex(currentParagraph.length);
           setCompleted(true);
         } else {
-          // Move to next paragraph or finish
           handleContinue();
         }
       }
