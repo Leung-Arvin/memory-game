@@ -328,7 +328,7 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
             <h2 className="sequence-title perfect-attack">Perfect! </h2>
           )}
           {sequenceState === "failed" && (
-            <h2 className="sequence-title failed-attack">Failed Attack</h2>
+            <h2 className="sequence-title failed-attack">Failed...</h2>
           )}
           {sequenceState === "dodge_success" && (
             <h2 className="sequence-title perfect-dodge">Perfect Dodge! </h2>
