@@ -137,6 +137,7 @@ function GameScreen({ boss, onRun }) {
           if (newInput.length === sequence.length) {
             setSequenceState("success");
             setTimeout(() => {
+              correctSound.play();
               setClickedDots([]);
               setBossHealth((prev) => Math.max(0, prev - damage));
               setAbility(null);
