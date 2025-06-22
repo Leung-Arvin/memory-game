@@ -85,7 +85,7 @@
   margin: 0 auto; 
   letter-spacing: .15em; 
   animation: 
-    typing 1.0s steps(10, end)
+    typing 1.0s steps(30, end)
 }
 
 @keyframes typing {
@@ -115,9 +115,6 @@
   transition: background 0.2s;
 }
 
-.sequence-dot.active {
-  background: red;
-}
 
 .sequence-container {
   position: absolute;
@@ -131,11 +128,46 @@
   display: flex;
   justify-content: center;
   margin-top: 50px;
+  font-size: 35px;
 }
 
-.sequence-dot.clicked {
-  background-color: red;
-  opacity: 1;
+.sequence-title.perfect-attack {
+  color: #6abc3a;
+}
+
+.sequence-title.failed-attack {
+  color: #ff0000;
+}
+
+.sequence-title.perfect-dodge {
+  color: #6abc3a;
+}
+
+.sequence-title.failed-dodge {
+  color: #ff0000;
+}
+
+.sequence-dot.active.heal {
+  background-color: #6abc3a;
+}
+.sequence-dot.active.attack {
+  background-color: #ff0000;
+}
+
+.sequence-dot.active.dodge {
+  background-color: #0066ff;
+}
+
+.sequence-dot.clicked.attack {
+  background-color: #ff0000;
+}
+
+.sequence-dot.clicked.dodge {
+  background-color: #0066ff;
+}
+
+.sequence-dot.clicked.heal {
+  background-color: #6abc3a;
 }
 
 .outcome-screen {
