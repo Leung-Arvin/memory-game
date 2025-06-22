@@ -41,11 +41,25 @@ const bosses = [
   },
 ];
 
+const soundEffects = {
+  click: new Howl({
+    src: ["/music/click.wav"],
+    volume: 0.3,
+  }),
+};
+
 function App() {
   const [gameState, setGameState] = useState("music_disclaimer"); // title → intro → boss → fight
   const [selectedBoss, setSelectedBoss] = useState(null);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const [currentSong, setCurrentSong] = useState("title_theme.mp3");
+  const [sfxEnabled, setSfxEnabled] = useState(true);
+
+  const playSound = (soundName) => {
+    if (sfxEnabled && soundEffects[soundName]) {
+      soundEffects[soundName].play();
+    }
+  };
 
   useEffect(() => {
     if (musicEnabled) {
@@ -62,13 +76,16 @@ function App() {
     }
   }, [musicEnabled, currentSong]);
   const startGame = () => {
+    playSound("click");
     setGameState("intro");
   };
   const handleIntroDone = () => {
+    playSound("click");
     setGameState("cutscene");
   };
 
   const returnToBossSelection = () => {
+    playSound("click");
     setCurrentSong("title_theme.mp3");
     setGameState("boss");
   };
@@ -76,6 +93,7 @@ function App() {
     const bossData = bosses.find((b) => b.name === boss);
     setCurrentSong(bossData.music);
     setSelectedBoss(bossData);
+    playSound("click");
     setGameState("fight");
   };
   const handleMusicAccept = () => {
@@ -91,15 +109,33 @@ function App() {
     <>
       {gameState === "music_disclaimer" && (
         <MusicDisclaimer
-          onAccept={handleMusicAccept}
-          onDecline={handleMusicDecline}
+          onAccept={() => {
+            playSound("click");
+            handleMusicAccept();
+          }}
+          onDecline={() => {
+            playSound("click");
+            handleMusicDecline();
+          }}
         />
       )}
       {gameState === "intro" && <IntroText onDone={handleIntroDone} />}
       {gameState === "cutscene" && (
-        <IntroCutScene onFinish={() => setGameState("boss")} />
+        <IntroCutScene
+          onFinish={() => {
+            playSound("click");
+            setGameState("boss");
+          }}
+        />
       )}
-      {gameState === "title" && <TitleScreen onStart={startGame} />}
+      {gameState === "title" && (
+        <TitleScreen
+          onStart={() => {
+            playSound("click");
+            startGame();
+          }}
+        />
+      )}
       {gameState === "boss" && <BossSelection onBossSelect={selectBoss} />}
       {gameState === "fight" && (
         <GameScreen boss={selectedBoss} onRun={returnToBossSelection} />
