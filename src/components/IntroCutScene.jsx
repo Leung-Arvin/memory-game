@@ -118,7 +118,7 @@ export default function IntroCutScene({ onFinish }) {
           <p key={i}>{line}</p>
         ))}
       </div>
-      <p className="hint-text">Use ← → arrows to move, Enter to skip</p>
+      <p className="hint-text">Use ← → arrows to move, Enter to continue</p>
     </div>
   );
 }

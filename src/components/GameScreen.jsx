@@ -5,6 +5,29 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Howl } from "howler";
 
 function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
+  const [gameState, setGameState] = useState("start");
+  const [ability, setAbility] = useState(null);
+  const [playerhealth, setPlayerHealth] = useState(boss.meowric_health);
+  const [bosshealth, setBossHealth] = useState(boss.health);
+  const [sequence, setSequence] = useState([]);
+  const [sequenceState, setSequenceState] = useState("");
+  const [playerInput, setPlayerInput] = useState([]);
+  const [dodgeSequence, setDodgeSequence] = useState(false);
+  const [enemyDamage, setEnemyDamage] = useState(0);
+  const [dots, setDots] = useState([]);
+  const [activeDot, setActiveDot] = useState(null);
+  const [clickedDots, setClickedDots] = useState([]);
+  const shouldShowDialog = 
+  gameState === "start" ||
+  gameState === "abilities" ||
+  (gameState === "sequence" && ability !== null) ||
+  (gameState === "enemy_attack" ) ||
+  gameState === "running" ||
+  gameState === "enemy_vanquished" ||
+  gameState === "player_lost";
+  let numberOfDots;
+
+
   const clickSound = useMemo(
     () =>
       new Howl({
@@ -32,6 +55,27 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
       }),
     [effectsVolume]
   );
+
+  const playerDamagedSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/hit.mp3"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
+
+  const enemyHitSound = useMemo(
+    () =>
+      new Howl({
+        src: ["/music/enemyHit.mp3"],
+        volume: effectsVolume,
+        preload: true,
+      }),
+    [effectsVolume]
+  );
+  
   const correctSound = useMemo(
     () =>
       new Howl({
@@ -41,21 +85,6 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
       }),
     [effectsVolume]
   );
-  const [gameState, setGameState] = useState("start");
-  const [ability, setAbility] = useState(null);
-  const [playerhealth, setPlayerHealth] = useState(boss.meowric_health);
-  const [bosshealth, setBossHealth] = useState(boss.health);
-  const [sequence, setSequence] = useState([]);
-  const [sequenceState, setSequenceState] = useState("");
-  const [playerInput, setPlayerInput] = useState([]);
-  const [dodgeSequence, setDodgeSequence] = useState(false);
-  const [enemyDamage, setEnemyDamage] = useState(0);
-  const [dots, setDots] = useState([]);
-  const [activeDot, setActiveDot] = useState(null);
-  const [clickedDots, setClickedDots] = useState([]);
-  const [currentBossMove, setCurrentBossMove] = useState("");
-
-  let numberOfDots;
 
   const generateDots = () => {
     switch (boss.difficulty) {
@@ -98,6 +127,7 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
       switch (boss.difficulty) {
         case "easy":
           setTimeout(() => {
+
             setActiveDot(dot.id);
             setTimeout(() => setActiveDot(null), 500);
           }, i * 800); // 800ms between dots
@@ -153,7 +183,7 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
           if (newInput.length === sequence.length) {
             setSequenceState("success");
             setTimeout(() => {
-              if (sfxEnabled) correctSound.play();
+              if (sfxEnabled) enemyHitSound.play();
               setClickedDots([]);
               setBossHealth((prev) => Math.max(0, prev - damage));
               setAbility(null);
@@ -213,7 +243,7 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
         }, 1000);
       } else {
         // Failed dodge sequence
-        if (sfxEnabled) failedSound.play();
+        if (sfxEnabled) playerDamagedSound.play();
         setSequenceState("dodge_failed");
         setTimeout(() => {
           setClickedDots([]);
@@ -240,9 +270,6 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
         damage = Math.floor(Math.random() * 15) + 80;
     }
     setEnemyDamage(damage); // Store damage for dodge sequence
-    setCurrentBossMove(
-      boss.moves[Math.floor(Math.random() * boss.moves.length)]
-    );
     // Start dodge sequence instead of immediately applying damage
     startSequence(null, true);
   };
@@ -289,27 +316,27 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
             <h2 className="sequence-title">
               {dodgeSequence
                 ? "Dodge! Remember the sequence!"
-                : "Remember the Sequence"}
+                : "Remember the Sequence!"}
             </h2>
           )}
           {sequenceState === "player_input" && (
             <h2 className="sequence-title">
               {dodgeSequence
                 ? "Quick! Repeat the sequence to dodge!"
-                : "I hope you remembered..."}
+                : "It's your turn, you've got this!"}
             </h2>
           )}
           {sequenceState === "success" && (
-            <h2 className="sequence-title">Perfect! </h2>
+            <h2 className="sequence-title perfect-attack">Perfect! </h2>
           )}
           {sequenceState === "failed" && (
-            <h2 className="sequence-title">Failed </h2>
+            <h2 className="sequence-title failed-attack">Failed Attack</h2>
           )}
           {sequenceState === "dodge_success" && (
-            <h2 className="sequence-title">Dodged! </h2>
+            <h2 className="sequence-title perfect-dodge">Perfect Dodge! </h2>
           )}
           {sequenceState === "dodge_failed" && (
-            <h2 className="sequence-title">Ouch! </h2>
+            <h2 className="sequence-title failed-dodge">Ouch! </h2>
           )}
 
           <div className="sequence-dots">
@@ -318,16 +345,27 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
                 key={dot.id}
                 className={`sequence-dot ${
                   activeDot === dot.id
-                    ? "active"
-                    : clickedDots.includes(dot.id)
-                    ? "clicked"
+                    ? `active ${
+                        dodgeSequence
+                          ? "dodge"
+                          : ability === "Nutritious Milk"
+                          ? "heal"
+                          : "attack"
+                      }`
+                    : ""
+                } ${
+                  clickedDots.includes(dot.id)
+                    ? `clicked ${
+                        dodgeSequence
+                          ? "dodge"
+                          : ability === "Nutritious Milk"
+                          ? "heal"
+                          : "attack"
+                      }`
                     : ""
                 }`}
                 style={{ left: `${dot.x}%`, top: `${dot.y}%` }}
-                onClick={() => {
-                  if (sfxEnabled) popSound.play();
-                  handleDotClick(dot.id);
-                }}
+                onClick={() => handleDotClick(dot.id)}
               />
             ))}
           </div>
@@ -364,6 +402,24 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
           name={boss.name}
         />
       </div>
+      {(gameState === "enemy_vanquished" || gameState === "player_lost") && (
+        <div className="outcome-screen">
+          <div className="outcome-content">
+            {gameState === "enemy_vanquished" && (
+              <>
+                <h1>Enemy Vanquished</h1>
+                <h2>Click to find your next opponent</h2>
+              </>
+            )}
+            {gameState === "player_lost" && (
+              <>
+                <h1>You've lost</h1>
+                <h2>Don't give up! Keep on fighting</h2>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       <div
         className="fight-container"
         style={{ backgroundImage: `url(${boss.backgroundImage})` }}
@@ -380,22 +436,31 @@ function GameScreen({ boss, onRun, effectsVolume, sfxEnabled }) {
             )}
           </div>
         </div>
-        <div className="dialog-box">
-          {gameState === "start" && <p>Oh No... do something!</p>}
-          {gameState === "abilities" && <p>How will you fight?</p>}
-          {(gameState === "abilities" || gameState === "sequence") &&
-            ability !== null && <p>You used {ability}</p>}
-          {(gameState === "enemy_attack" || dodgeSequence) && (
-            <p>
-              {boss.name} used {currentBossMove}
-            </p>
-          )}
-          {gameState === "running" && (
-            <div className="dialog-box">
-              <p>Got away safely!</p>
-            </div>
-          )}
-        </div>
+        {shouldShowDialog && (
+    <div className="dialog-box">
+      {gameState === "start" && <p>Oh No... do something!</p>}
+      {gameState === "abilities" && <p>How will you fight?</p>}
+      {(gameState === "abilities" || gameState === "sequence") && ability !== null && (
+        <p>You used {ability}</p>
+      )}
+      {(gameState === "enemy_attack") && (
+        <p>{boss.name} used {boss.moves[Math.floor(Math.random() * boss.moves.length)]}</p>
+      )}
+      {gameState === "running" && <p>Got away safely!</p>}
+      {gameState === "enemy_vanquished" && (
+        <>
+          <h1>Enemy Vanquished</h1>
+          <h2>Click to find your next opponent</h2>
+        </>
+      )}
+      {gameState === "player_lost" && (
+        <>
+          <h1>You've lost</h1>
+          <h2>Don't give up! Keep on fighting</h2>
+        </>
+      )}
+    </div>
+  )}
       </div>
 
       <div className="action-buttons">
